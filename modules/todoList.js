@@ -45,17 +45,12 @@ const updateTodo = () => {
   });
 };
 
-// create and render tasks to the DOM
-const displayTodo = () => {
-  todoContent.innerHTML = '';
-  const todos = getTodo();
-  todos.forEach((todo) => {
-    const content = `
-    <div id="${todo.id}" class="label-container">
+const render = ({ id, description }) => `
+    <div id="${id}" class="label-container">
     <label class="container">
       <form class="task-edit">
         <input class="checkbox" type="checkbox">
-        <input class="desc" value="${todo.description}" type="text">
+        <input class="desc" value="${description}" type="text">
       </form>
     </label>
     <div class="edit">
@@ -65,7 +60,13 @@ const displayTodo = () => {
   </div>
     <hr>
     `;
-    todoContent.innerHTML += content;
+
+// create and render tasks to the DOM
+const displayTodo = () => {
+  todoContent.innerHTML = '';
+  const todos = getTodo();
+  todos.forEach((todo) => {
+    todoContent.innerHTML += render(todo);
   });
   removeTodo();
   updateTodo();
@@ -76,8 +77,8 @@ const displayTodo = () => {
 const addTodo = () => {
   const form = document.getElementById('task-form');
   const addInput = document.getElementById('todoTextField');
-  addInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter' && addInput.value !== '') {
+  addInput.addEventListener('keypress', ({ key }) => {
+    if (key === 'Enter' && addInput.value !== '') {
       const todoList = {
         id: getTodo().length + 1,
         description: addInput.value,
